@@ -73,11 +73,12 @@ function App() {
         gap: "2rem",
         margin: "0 auto",
         alignItems: "center",
+        fontFamily:"monospace"
       }}
     >
       <div style={{ fontSize: "2rem", textAlign: "center" }}>
         {isWinner && "Foi pura sorte, aperte ENTER para tentar novamente"}
-        {isLoser && "HAHHAAHAHAAHHAHA! RUIM! ENTER para tentar novamente"}
+        {isLoser && "Muito ruim, tente novamente [ENTER]"}
       </div>
       <HangmanDrawing numDeChutes={incorrectLetters.length} />
       <HangmanWord
