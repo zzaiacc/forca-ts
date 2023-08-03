@@ -1,45 +1,46 @@
-import styles from "./Teclado.module.css"
+import styles from "./Keyboard.module.css"
 
 const KEYS = [
-  'a',
-  'b',
-  'c',
-  'd',
-  'e',
-  'f',
-  'g',
-  'h',
-  'i',
-  'j',
-  'k',
-  'l',
-  'm',
-  'n',
-  'o',
-  'p',
-  'q',
-  'r',
-  's',
-  't',
-  'u',
-  'v',
-  'w',
-  'x',
-  'y',
-  'z',
-  '-',
+  "a",
+  "b",
+  "c",
+  "d",
+  "e",
+  "f",
+  "g",
+  "h",
+  "i",
+  "j",
+  "k",
+  "l",
+  "m",
+  "n",
+  "o",
+  "p",
+  "q",
+  "r",
+  "s",
+  "t",
+  "u",
+  "v",
+  "w",
+  "x",
+  "y",
+  "z",
+  " "
 ]
+
 type KeyboardProps = {
   disabled?: boolean
   activeLetters: string[]
   inactiveLetters: string[]
-  addChuteLetra: (letter: string) => void
+  addGuessedLetter: (letter: string) => void
 }
 
 export function Keyboard({
   activeLetters,
   inactiveLetters,
-  addChuteLetra,
+  addGuessedLetter,
   disabled = false,
 }: KeyboardProps) {
   return (
@@ -55,7 +56,7 @@ export function Keyboard({
         const isInactive = inactiveLetters.includes(key)
         return (
           <button
-            onClick={() => addChuteLetra(key)}
+            onClick={() => addGuessedLetter(key)}
             className={`${styles.btn} ${isActive ? styles.active : ""} ${
               isInactive ? styles.inactive : ""
             }`}
@@ -69,5 +70,3 @@ export function Keyboard({
     </div>
   )
 }
-
-export default Keyboard

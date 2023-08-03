@@ -1,44 +1,43 @@
-import { useState, useCallback, useEffect } from "react";
-import filmes from "./filmes.json";
-// import animais from "./animais.json"
-import HangmanDesenho from "./components/HangmanDesenho";
-import Keyboard from "./components/Keyboard";
-import HangmanPalavra from "./components/HangmanPalavra";
+import { useCallback, useEffect, useState } from "react";
+import { HangmanDrawing } from "./components/HangmanDrawing";
+import { HangmanWord } from "./components/HangmanWord";
+import { Keyboard } from "./components/Keyboard";
+import "./App.css";
+import palavra from "./filmes.json";
+
+function getWord() {
+  return palavra[Math.floor(Math.random() * palavra.length)];
+}
 
 function App() {
-  const [palavraParaAcertar, setPalavraParaAcertar] = useState(() => {
-    return filmes[Math.floor(Math.random() * filmes.length)];
-  });
+  const [wordToGuess, setWordToGuess] = useState(getWord);
+  const [guessedLetters, setGuessedLetters] = useState<string[]>([]);
 
-  console.log(setPalavraParaAcertar)
-
-  const [chuteLetras, setChuteLetras] = useState<string[]>([]);
-
-  const letrasErradas = chuteLetras.filter(
-    (letter) => !palavraParaAcertar.includes(letter)
+  const incorrectLetters = guessedLetters.filter(
+    (letter) => !wordToGuess.includes(letter)
   );
 
-  const isLoser = letrasErradas.length >= 6;
-  const isWinner = palavraParaAcertar
+  const isLoser = incorrectLetters.length >= 6;
+  const isWinner = wordToGuess
     .split("")
-    .every((letter) => chuteLetras.includes(letter));
+    .every((letter) => guessedLetters.includes(letter));
 
-  const addChuteLetras = useCallback(
+  const addGuessedLetter = useCallback(
     (letter: string) => {
-      if (chuteLetras.includes(letter) || isLoser || isWinner)
-        return setChuteLetras((letrasAtuais) => [...letrasAtuais, letter]);
+      if (guessedLetters.includes(letter) || isLoser || isWinner) return;
+
+      setGuessedLetters((currentLetters) => [...currentLetters, letter]);
     },
-    [chuteLetras, isWinner, isLoser]
+    [guessedLetters, isWinner, isLoser]
   );
 
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
       const key = e.key;
-
-      if (!key.match(/^[a-z-]$/)) return;
+      if (!key.match(/^[a-z]$/) && key !== " ") return;
 
       e.preventDefault();
-      addChuteLetras(key);
+      addGuessedLetter(key);
     };
 
     document.addEventListener("keypress", handler);
@@ -46,7 +45,24 @@ function App() {
     return () => {
       document.removeEventListener("keypress", handler);
     };
-  }, [chuteLetras]);
+  }, [guessedLetters]);
+
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => {
+      const key = e.key;
+      if (key !== "Enter") return;
+
+      e.preventDefault();
+      setGuessedLetters([]);
+      setWordToGuess(getWord());
+    };
+
+    document.addEventListener("keypress", handler);
+
+    return () => {
+      document.removeEventListener("keypress", handler);
+    };
+  }, []);
 
   return (
     <div
@@ -60,26 +76,23 @@ function App() {
       }}
     >
       <div style={{ fontSize: "2rem", textAlign: "center" }}>
-        {isWinner && "Winner!! - Atualize a pagina para tentar novamente"}
-        {isLoser && "Lixo, vc perdeu"}
+        {isWinner && "Foi pura sorte, aperte ENTER para tentar novamente"}
+        {isLoser && "HAHHAAHAHAAHHAHA! RUIM! ENTER para tentar novamente"}
       </div>
-
-      <HangmanDesenho numDeChutes={letrasErradas.length} />
-
-      <HangmanPalavra
+      <HangmanDrawing numDeChutes={incorrectLetters.length} />
+      <HangmanWord
         reveal={isLoser}
-        chuteLetras={chuteLetras}
-        palavraParaAcertar={palavraParaAcertar}
+        guessedLetters={guessedLetters}
+        wordToGuess={wordToGuess}
       />
-
       <div style={{ alignSelf: "stretch" }}>
         <Keyboard
           disabled={isWinner || isLoser}
-          activeLetters={chuteLetras.filter((letter) =>
-            palavraParaAcertar.includes(letter)
+          activeLetters={guessedLetters.filter((letter) =>
+            wordToGuess.includes(letter)
           )}
-          inactiveLetters={letrasErradas}
-          addChuteLetra={addChuteLetras}
+          inactiveLetters={incorrectLetters}
+          addGuessedLetter={addGuessedLetter}
         />
       </div>
     </div>

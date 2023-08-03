@@ -1,0 +1,8 @@
+html,
+body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow-y: hidden; /* Desabilita o scroll vertical */
+  zoom: 0.9;
+}
