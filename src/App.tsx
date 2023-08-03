@@ -10,6 +10,8 @@ function App() {
     return filmes[Math.floor(Math.random() * filmes.length)];
   });
 
+  console.log(setPalavraParaAcertar)
+
   const [chuteLetras, setChuteLetras] = useState<string[]>([]);
 
   const letrasErradas = chuteLetras.filter(
