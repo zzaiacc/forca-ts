@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect } from "react"
+import { useState, useCallback, useEffect } from 'react'
 import filmes from "./filmes.json"
 // import animais from "./animais.json"
 import HangmanDesenho from "./components/HangmanDesenho"
